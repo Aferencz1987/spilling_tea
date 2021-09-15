@@ -12,7 +12,6 @@ class Api::V1::SubscriptionsController < ApplicationController
 
   def create
     params = JSON.parse(request.body.read, symbolize_names: true)
-    # require "pry"; binding.pry
     tea = Tea.find_by(title: params[:title])
     if Customer.exists?(params[:customer_id])
       customer = Customer.find(params[:customer_id])
@@ -29,8 +28,23 @@ class Api::V1::SubscriptionsController < ApplicationController
 
   def update
     params = JSON.parse(request.body.read, symbolize_names: true)
-    customer = Customer.find(params[:customer_id])
     if Subscription.exists?(params[:subscription_id])
-    subscription = customer.subscriptions.
+      subscription = Subscription.find(params[:subscription_id])
+      subscription.update(frequency: params[:freqency])
+      render json: SubscriptionSerializer.new(subscription)
+    else
+      render json: {error: "Subscription not found"}, status: 404
+    end
+  end
+
+  def delete
+    params = JSON.parse(request.body.read, symbolize_names: true)
+    if Subscription.exists?(params[:subscription_id])
+      subscription = Subscription.find(params[:subscription_id])
+      subscription.update(status: "inactive")
+      render json: SubscriptionSerializer.new(subscription)
+    else
+      render json: {error: "Subscription not found"}, status: 404
+    end
   end
 end

@@ -14,7 +14,6 @@ RSpec.describe 'create subscription' do
     }, as: :json
     subscription_result = JSON.parse(response.body, symbolize_names: true)
     expect(status).to eq(200)
-    
   end
 
   it 'returns sad json response' do
