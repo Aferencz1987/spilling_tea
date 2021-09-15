@@ -22,3 +22,5 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+
+MAKE A JSON CONTRACT and ask that info be sent in as JSON
