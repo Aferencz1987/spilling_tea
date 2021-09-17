@@ -13,28 +13,34 @@ class Api::V1::SubscriptionsController < ApplicationController
   def create
     params = JSON.parse(request.body.read, symbolize_names: true)
     tea = Tea.find_by(title: params[:title])
-    if Customer.exists?(params[:customer_id])
-      customer = Customer.find(params[:customer_id])
-      subscription = customer.subscriptions.new(tea: tea, title: tea.title, price: params[:price], status: params[:status], frequency: params[:frequency])
-      if subscription.save
-        render json: SubscriptionSerializer.new(subscription)
+    if tea
+      if Customer.exists?(params[:customer_id])
+        customer = Customer.find(params[:customer_id])
+        subscription = customer.subscriptions.new(tea: tea, title: tea.title, price: params[:price], status: params[:status], frequency: params[:frequency])
+        if subscription.save
+          result = {body: SubscriptionSerializer.new(subscription), status: 201}
+        else
+          result = {error: "Subscription not saved!", status: 405}
+        end
       else
-        render json: {error: "Subscription not saved!"}, status: 405
+        result = {error: "No customer with that id.", status: 404}
       end
     else
-      render json: {error: "No customer with that id."}, status: 404
+      result = {error: "No tea with that name.", status: 404}
     end
+    render json: result, status: result[:status]
   end
 
   def update
     params = JSON.parse(request.body.read, symbolize_names: true)
     if Subscription.exists?(params[:subscription_id])
       subscription = Subscription.find(params[:subscription_id])
-      subscription.update(frequency: params[:freqency])
-      render json: SubscriptionSerializer.new(subscription)
+      subscription.update(frequency: params[:frequency])
+      result = {body: SubscriptionSerializer.new(subscription), status: 200}
     else
-      render json: {error: "Subscription not found"}, status: 404
+      result = {error: "Subscription not found", status: 404}
     end
+    render json: result, status: result[:status]
   end
 
   def delete
@@ -42,9 +48,10 @@ class Api::V1::SubscriptionsController < ApplicationController
     if Subscription.exists?(params[:subscription_id])
       subscription = Subscription.find(params[:subscription_id])
       subscription.update(status: "inactive")
-      render json: SubscriptionSerializer.new(subscription)
+      result = {body: SubscriptionSerializer.new(subscription), status: 200}
     else
-      render json: {error: "Subscription not found"}, status: 404
+      result = {error: "Subscription not found", status: 404}
     end
+    render json: result, status: result[:status]
   end
 end
