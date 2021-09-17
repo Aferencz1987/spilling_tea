@@ -26,7 +26,7 @@ RSpec.describe 'get all of a clients subscription' do
                                                         frequency: 10)
 
 
-    get "/api/v1/customer/#{fakey_mc_goober.id}/subscriptions", as: :json
+    get "/api/v1/customer/#{fakey_mc_goober.id}/subscriptions"
 
     update_result = JSON.parse(response.body, symbolize_names: true)
     expect(status).to eq(200)

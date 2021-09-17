@@ -1,6 +1,5 @@
 class Api::V1::SubscriptionsController < ApplicationController
   def index
-    params = JSON.parse(request.body.read, symbolize_names: true)
     customer = Customer.find(params[:id])
     if customer
       subscriptions = customer.subscriptions
