@@ -23,6 +23,7 @@ RSpec.describe 'update subscription' do
       }, as: :json
     update_result = JSON.parse(response.body, symbolize_names: true)
     expect(status).to eq(200)
+    require "pry"; binding.pry
   end
 
   it 'returns sad json response because subscription doesnt exist' do

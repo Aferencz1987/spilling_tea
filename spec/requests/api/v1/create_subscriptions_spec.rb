@@ -14,12 +14,9 @@ RSpec.describe 'create subscription' do
     }, as: :json
     subscription_result = JSON.parse(response.body, symbolize_names: true)
     expect(status).to eq(201)
-    # fetch all subscribed teas for fakey mc goober.
-    # verify that subscribed tea is in there
-    # make a thing and then go back to it / request it
   end
 
-  it 'returns sad json response becuase no customer' do #explaination in name!!
+  it 'returns sad json response becuase no customer' do 
     tea = Tea.create!(title: "black tea", description: "caffinated", temperature: 200, brew_time: 10)
 
     post "/api/v1/customer/321/subscription", params:
